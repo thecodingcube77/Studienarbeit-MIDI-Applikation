@@ -9,12 +9,14 @@ import java.awt.*;
 public class ConfiguratorView extends javax.swing.JFrame {
 
     private final JButton addRowButton;
+    private final JButton saveButton;
     private final JTable table;
 
     public ConfiguratorView(TableView tableView) {
         super("Konfigurator");
         table = new JTable(tableView);
         addRowButton = new JButton("Neue Zeile");
+        saveButton = new JButton("Speichern");
         initView();
         System.out.println("Table-UI: " + table.getParent());
     };
@@ -22,8 +24,9 @@ public class ConfiguratorView extends javax.swing.JFrame {
     private void initView() {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(new java.awt.BorderLayout());
-        this.add(new JScrollPane(table), java.awt.BorderLayout.CENTER);
-        this.add(addRowButton, BorderLayout.SOUTH);
+        this.add(new JScrollPane(table), java.awt.BorderLayout.NORTH);
+        this.add(addRowButton, BorderLayout.CENTER);
+        this.add(saveButton, BorderLayout.SOUTH);
         this.pack();
         this.setLocationRelativeTo(null);
     }
@@ -34,5 +37,9 @@ public class ConfiguratorView extends javax.swing.JFrame {
 
     public AbstractButton getAddRowButton() {
         return addRowButton;
+    }
+
+    public JButton getSaveButton() {
+        return saveButton;
     }
 }

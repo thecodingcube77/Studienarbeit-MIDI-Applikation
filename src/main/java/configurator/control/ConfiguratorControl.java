@@ -11,6 +11,7 @@ import configurator.view.ConfiguratorView;
 import configurator.view.TableView;
 
 import java.awt.*;
+import java.io.IOException;
 
 public class ConfiguratorControl {
     private final ConfiguratorTableModel dataModel;
@@ -39,11 +40,11 @@ public class ConfiguratorControl {
         JComboBox<String> comboBoxFunction = new JComboBox<>();
         table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBoxFunction));
 
-        ParameterEditorControl parameterEditorControl1 = new ParameterEditorControl();
+        ParameterEditorControl parameterEditorControl1 = new ParameterEditorControl(dropdownModel);
         table.getColumnModel().getColumn(2).setCellEditor(parameterEditorControl1);
         table.getColumnModel().getColumn(2).setCellRenderer(new LabelRendererControl(dropdownModel));
 
-        ParameterEditorControl parameterEditorControl2 = new ParameterEditorControl();
+        ParameterEditorControl parameterEditorControl2 = new ParameterEditorControl(dropdownModel);
         table.getColumnModel().getColumn(3).setCellEditor(parameterEditorControl2);
         table.getColumnModel().getColumn(3).setCellRenderer(new LabelRendererControl(dropdownModel));
 
@@ -88,8 +89,19 @@ public class ConfiguratorControl {
 
     private void setupActions() {
         view.getAddRowButton().addActionListener(e -> {
-            dataModel.addRow(new MidiDataModel(null, null, null, null ));
+            dataModel.addRow(new MidiDataModel(null, null, null, null, dropdownModel ));
             tableView.fireTableDataChanged();
+        });
+        view.getSaveButton().addActionListener(e -> {
+            JTable table = view.getTable();
+            try {
+                if (table.isEditing()) {
+                    table.getCellEditor().stopCellEditing();
+                }
+                dataModel.saveTable();
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
         });
     }
 }

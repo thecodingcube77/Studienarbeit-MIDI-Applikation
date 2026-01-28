@@ -7,12 +7,14 @@ public class MidiDataModel {
     String function;
     String parameter1;
     String parameter2;
+    DropdownModel dropdownModel;
 
-    public MidiDataModel(String input, String function, String parameter1, String parameter2) {
+    public MidiDataModel(String input, String function, String parameter1, String parameter2, DropdownModel dropdownModel) {
         this.input = input;
         this.function = function;
         this.parameter1 = parameter1;
         this.parameter2 = parameter2;
+        this.dropdownModel = dropdownModel;
     }
 
     public String getInput() {
@@ -20,12 +22,15 @@ public class MidiDataModel {
     }
     public void setInput(String input) {
         this.input = input;
+        this.setFunction(dropdownModel.getFunctions(getInput())[0]);
     }
     public String getFunction() {
         return function;
     }
     public void setFunction(String function) {
         this.function = function;
+        this.setParameter1(String.valueOf(0));
+        this.setParameter2(String.valueOf(0));
     }
     public String getParameter1() {
         return parameter1;

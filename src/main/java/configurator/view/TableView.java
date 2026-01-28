@@ -59,7 +59,7 @@ public class TableView extends AbstractTableModel {
             case 2 -> data.setParameter1((String) checkRange((String) value));
             case 3 -> data.setParameter2((String) checkRange((String) value));
         }
-        fireTableCellUpdated(row, col);
+        fireTableRowsUpdated(row, row);
     }
 
     @Override
@@ -92,7 +92,7 @@ public class TableView extends AbstractTableModel {
             if (Integer.parseInt(String.valueOf(value)) < 0) {
                 return String.valueOf(0);
             }
-            return String.valueOf(value);
+            return String.valueOf(Integer.parseInt(String.valueOf(value)));
         }
         catch (NumberFormatException e) {
             return String.valueOf(0);

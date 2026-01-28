@@ -1,0 +1,16 @@
+[
+  {
+    "channel": "1",
+    "input-type": "Knopf",
+    "command": "Note On",
+    "parameter2": "44",
+    "parameter1": "127"
+  },
+  {
+    "channel": "1",
+    "input-type": "Knopf",
+    "command": "Note On",
+    "parameter2": "0",
+    "parameter1": "55"
+  }
+]

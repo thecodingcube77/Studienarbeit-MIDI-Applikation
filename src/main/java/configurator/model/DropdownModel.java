@@ -28,9 +28,11 @@ public class DropdownModel {
     public String[] getElement() {
         return functions.keySet().toArray(new String[0]);
     }
-    public String[] getFunctions(String function) {
-        return functions.getOrDefault(function, new String[]{});
+
+    public String[] getFunctions(String input) {
+        return functions.getOrDefault(input, new String[]{});
     }
+
     public String[] getParameters(String parameter) {
         if (parameter == null)
             return new String[0];

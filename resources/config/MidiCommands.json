@@ -1,26 +1,26 @@
-[
-  {
-    "name": "noteOn",
-    "type": "button",
+{
+  "note-on": {
+    "input-type": "button",
+    "channel-applicable": true,
     "parameter1": {
-      "description": "pitch",
-      "required": 1
+      "name": "pitch",
+      "required": true
     },
     "parameter2": {
-      "description": "velocity",
-      "required": 1
+      "name": "velocity",
+      "required": true
     }
   },
-  {
-    "name": "noteOff",
-    "type": "button",
+  "note-off": {
+    "input-type": "button",
+    "channel-applicable": true,
     "parameter1": {
-      "description": "pitch",
-      "required": 1
+      "name": "pitch",
+      "required": true
     },
     "parameter2": {
-      "description": "velocity",
-      "required": 1
+      "name": "velocity",
+      "required": true
     }
   }
-]
+}

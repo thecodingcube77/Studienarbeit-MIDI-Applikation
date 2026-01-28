@@ -1,0 +1,26 @@
+[
+  {
+    "name": "noteOn",
+    "type": "button",
+    "parameter1": {
+      "description": "pitch",
+      "required": 1
+    },
+    "parameter2": {
+      "description": "velocity",
+      "required": 1
+    }
+  },
+  {
+    "name": "noteOff",
+    "type": "button",
+    "parameter1": {
+      "description": "pitch",
+      "required": 1
+    },
+    "parameter2": {
+      "description": "velocity",
+      "required": 1
+    }
+  }
+]

@@ -1,0 +1,26 @@
+{
+  "note-on": {
+    "input-type": "button",
+    "channel-applicable": true,
+    "parameter1": {
+      "name": "pitch",
+      "required": true
+    },
+    "parameter2": {
+      "name": "velocity",
+      "required": true
+    }
+  },
+  "note-off": {
+    "input-type": "button",
+    "channel-applicable": true,
+    "parameter1": {
+      "name": "pitch",
+      "required": true
+    },
+    "parameter2": {
+      "name": "velocity",
+      "required": true
+    }
+  }
+}

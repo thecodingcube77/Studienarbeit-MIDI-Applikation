@@ -18,7 +18,6 @@ public class ConfiguratorView extends javax.swing.JFrame {
         addRowButton = new JButton("Neue Zeile");
         saveButton = new JButton("Speichern");
         initView();
-        System.out.println("Table-UI: " + table.getParent());
     };
 
     private void initView() {

@@ -29,8 +29,8 @@ public class TableView extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return switch (col) {
-            case 0 -> "Input";
-            case 1 -> "Funktion";
+            case 0 -> "Funktion";
+            case 1 -> "Input";
             case 2 -> "Parameter1";
             case 3 -> "Parameter2";
             default -> null;
@@ -41,8 +41,8 @@ public class TableView extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         MidiDataModel row = model.getRow(rowIndex);
         return switch(columnIndex){
-            case 0 -> row.getInput();
-            case 1 -> row.getFunction();
+            case 0 -> row.getCommand();
+            case 1 -> row.getInputType();
             case 2 -> row.getParameter1();
             case 3 -> row.getParameter2();
             default -> null;
@@ -54,8 +54,8 @@ public class TableView extends AbstractTableModel {
         if(value == null) return;
         MidiDataModel data = model.getRow(row);
         switch(col) {
-            case 0 -> data.setInput((String) value);
-            case 1 -> data.setFunction((String) value);
+            case 0 -> data.setCommand((String) value);
+            case 1 -> data.setInputType((String) value);
             case 2 -> data.setParameter1((String) checkRange((String) value));
             case 3 -> data.setParameter2((String) checkRange((String) value));
         }

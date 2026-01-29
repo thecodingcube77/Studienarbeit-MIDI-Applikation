@@ -7,6 +7,7 @@ import configurator.model.DropdownModel;
 import javax.swing.*;
 import javax.swing.table.TableCellEditor;
 import java.awt.*;
+import java.io.IOException;
 
 public class ParameterEditorControl extends AbstractCellEditor implements TableCellEditor {
 
@@ -15,7 +16,7 @@ public class ParameterEditorControl extends AbstractCellEditor implements TableC
     private JTextField textField = new JTextField();
     private final DropdownModel dropdownModel;
 
-    public ParameterEditorControl(DropdownModel dropdownModel) {
+    public ParameterEditorControl(DropdownModel dropdownModel) throws IOException {
         this.dropdownModel = new DropdownModel();
         panel.add(label, BorderLayout.WEST);
         panel.add(textField, BorderLayout.CENTER);
@@ -31,13 +32,13 @@ public class ParameterEditorControl extends AbstractCellEditor implements TableC
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        Object selectedFunction = table.getValueAt(row, 1);
+        Object selectedCommand = table.getValueAt(row, 0);
 
         String parameter = "";
-        if (selectedFunction != null) {
+        if (selectedCommand != null) {
             parameter = switch (column) {
-                case 2 -> dropdownModel.getParameterNames(selectedFunction.toString())[0];
-                case 3 -> dropdownModel.getParameterNames(selectedFunction.toString())[1];
+                case 2 -> dropdownModel.getMidiParameter1Name(selectedCommand.toString());
+                case 3 -> dropdownModel.getMidiParameter2Name(selectedCommand.toString());
                 default -> "";
             };
         }

@@ -21,13 +21,13 @@ public class LabelRendererControl extends javax.swing.JPanel implements TableCel
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Object selectedFunction = table.getValueAt(row, 1);
+        Object selectedCommand = table.getValueAt(row, 0);
 
         String parameter = "";
-        if (selectedFunction != null) {
+        if (selectedCommand != null) {
             parameter = switch (column) {
-                case 2 -> dropdownModel.getParameterNames(selectedFunction.toString())[0];
-                case 3 -> dropdownModel.getParameterNames(selectedFunction.toString())[1];
+                case 2 -> dropdownModel.getMidiParameter1Name(selectedCommand.toString());
+                case 3 -> dropdownModel.getMidiParameter2Name(selectedCommand.toString());
                 default -> "";
             };
 

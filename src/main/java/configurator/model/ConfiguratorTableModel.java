@@ -28,8 +28,8 @@ public class ConfiguratorTableModel {
 
         for (int i = 0; i < getRowCount(); i++) {
             JSONObject rowData = new JSONObject();
-            rowData.put("input-type", rows.get(i).getInput());
-            rowData.put("command", rows.get(i).getFunction());
+            rowData.put("input-type", rows.get(i).getCommand());
+            rowData.put("command", rows.get(i).getInputType());
             rowData.put("channel", "1");
             rowData.put("parameter1", rows.get(i).getParameter1());
             rowData.put("parameter2", rows.get(i).getParameter2());
@@ -40,11 +40,11 @@ public class ConfiguratorTableModel {
         }
     }
 
-    public void updateInput(int index, String value) {
-        rows.get(index).setInput(value);
+    public void updateCommand(int index, String value) {
+        rows.get(index).setCommand(value);
     }
-    public void updateFunction(int index, String value) {
-        rows.get(index).setFunction(value);
+    public void updateInputType(int index, String value) {
+        rows.get(index).setInputType(value);
     }
     public void updateParameter1(int index, String value) {
         rows.get(index).setParameter1(value);

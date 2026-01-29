@@ -3,32 +3,32 @@
 package configurator.model;
 
 public class MidiDataModel {
-    String input;
-    String function;
+    String command;
+    String inputType;
     String parameter1;
     String parameter2;
     DropdownModel dropdownModel;
 
-    public MidiDataModel(String input, String function, String parameter1, String parameter2, DropdownModel dropdownModel) {
-        this.input = input;
-        this.function = function;
+    public MidiDataModel(String command, String inputType, String parameter1, String parameter2, DropdownModel dropdownModel) {
+        this.command = command;
+        this.inputType = inputType;
         this.parameter1 = parameter1;
         this.parameter2 = parameter2;
         this.dropdownModel = dropdownModel;
     }
 
-    public String getInput() {
-        return input;
+    public String getCommand() {
+        return command;
     }
-    public void setInput(String input) {
-        this.input = input;
-        this.setFunction(dropdownModel.getFunctions(getInput())[0]);
+    public void setCommand(String command) {
+        this.command = command;
+        this.setInputType(dropdownModel.getInputType(getCommand()));
     }
-    public String getFunction() {
-        return function;
+    public String getInputType() {
+        return inputType;
     }
-    public void setFunction(String function) {
-        this.function = function;
+    public void setInputType(String inputType) {
+        this.inputType = inputType;
         this.setParameter1(String.valueOf(0));
         this.setParameter2(String.valueOf(0));
     }

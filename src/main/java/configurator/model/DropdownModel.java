@@ -4,7 +4,7 @@ package configurator.model;
 
 import java.io.IOException;
 import java.util.*;
-import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.file.Files;
@@ -19,12 +19,28 @@ public class DropdownModel {
     public DropdownModel() throws IOException {
 
         for(String key : midiObject.keySet()) {
-            String inputType = midiObject.getJSONObject(key).getString("input-type");
-            String channelApplicable = String.valueOf(midiObject.getJSONObject(key).getBoolean("channel-applicable"));
-            String midiParameter1Name = midiObject.getJSONObject(key).getJSONObject("parameter1").getString("name");
-            String midiParameter1Req = String.valueOf(midiObject.getJSONObject(key).getJSONObject("parameter1").getBoolean("required"));
-            String midiParameter2Name = midiObject.getJSONObject(key).getJSONObject("parameter2").getString("name");
-            String midiParameter2Req = String.valueOf(midiObject.getJSONObject(key).getJSONObject("parameter2").getBoolean("required"));
+            String inputType = null;
+            String channelApplicable = null;
+            String midiParameter1Name = null;
+            String midiParameter1Req = null;
+            String midiParameter2Name = null;
+            String midiParameter2Req = null;
+
+            try {
+                inputType = midiObject.getJSONObject(key).getString("input-type");
+                channelApplicable = String.valueOf(midiObject.getJSONObject(key).getBoolean("channel-applicable"));
+
+                if (midiObject.getJSONObject(key).has("parameter1")) {
+                    midiParameter1Name = midiObject.getJSONObject(key).getJSONObject("parameter1").getString("name");
+                    midiParameter1Req = String.valueOf(midiObject.getJSONObject(key).getJSONObject("parameter1").getBoolean("required"));
+                }
+                if (midiObject.getJSONObject(key).has("parameter2")) {
+                    midiParameter2Name = midiObject.getJSONObject(key).getJSONObject("parameter2").getString("name");
+                    midiParameter2Req = String.valueOf(midiObject.getJSONObject(key).getJSONObject("parameter2").getBoolean("required"));
+                }
+            }  catch (JSONException e) {
+                e.printStackTrace();
+            }
 
             ArrayList<String> midiCommandInfo = new ArrayList<>();
             midiCommandInfo.add(inputType);
@@ -41,9 +57,9 @@ public class DropdownModel {
     public String[] getMidiCommands() {
         return midiCommandMap.keySet().toArray(new String[0]);
     }
-    public String getInputType(String key) {
+    public String[] getInputType(String key) {
         ArrayList<String> a = midiCommandMap.get(key);
-        return a.get(0);
+        return a.get(0).toLowerCase().split(",");
     }
     public boolean getChannelApplicable(String key) {
         ArrayList<String> a = midiCommandMap.get(key);

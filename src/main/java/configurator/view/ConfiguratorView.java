@@ -3,7 +3,6 @@
 package configurator.view;
 
 import javax.swing.*;
-import configurator.model.ConfiguratorTableModel;
 import java.awt.*;
 
 public class ConfiguratorView extends javax.swing.JFrame {
@@ -17,8 +16,9 @@ public class ConfiguratorView extends javax.swing.JFrame {
         table = new JTable(tableView);
         addRowButton = new JButton("Neue Zeile");
         saveButton = new JButton("Speichern");
+        table.getTableHeader().setReorderingAllowed(false);
         initView();
-    };
+    }
 
     private void initView() {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);

@@ -32,16 +32,7 @@ public class ParameterEditorControl extends AbstractCellEditor implements TableC
 
     @Override
     public Component getTableCellEditorComponent(JTable table, Object value, boolean isSelected, int row, int column) {
-        Object selectedCommand = table.getValueAt(row, 0);
-
-        String parameter = "";
-        if (selectedCommand != null) {
-            parameter = switch (column) {
-                case 2 -> dropdownModel.getMidiParameter1Name(selectedCommand.toString());
-                case 3 -> dropdownModel.getMidiParameter2Name(selectedCommand.toString());
-                default -> "";
-            };
-        }
+        String parameter = LabelRendererControl.getMidiParamNames(table, row, column, dropdownModel);
 
         label.setText(parameter + ": ");
         textField.setText(value != null ? value.toString() : "");

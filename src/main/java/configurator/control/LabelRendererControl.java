@@ -21,17 +21,7 @@ public class LabelRendererControl extends javax.swing.JPanel implements TableCel
 
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-        Object selectedCommand = table.getValueAt(row, 0);
-
-        String parameter = "";
-        if (selectedCommand != null) {
-            parameter = switch (column) {
-                case 2 -> dropdownModel.getMidiParameter1Name(selectedCommand.toString());
-                case 3 -> dropdownModel.getMidiParameter2Name(selectedCommand.toString());
-                default -> "";
-            };
-
-        }
+        String parameter = getMidiParamNames(table, row, column, dropdownModel);
         String number = "";
         if (value != null) {
             number = value.toString();
@@ -45,5 +35,20 @@ public class LabelRendererControl extends javax.swing.JPanel implements TableCel
         }
 
         return this;
+    }
+
+    static String getMidiParamNames(JTable table, int row, int column, DropdownModel dropdownModel) {
+        Object selectedCommand = table.getValueAt(row, 0);
+
+        String parameter = "";
+        if (selectedCommand != null) {
+            parameter = switch (column) {
+                case 2 -> dropdownModel.getMidiParameter1Name(selectedCommand.toString());
+                case 3 -> dropdownModel.getMidiParameter2Name(selectedCommand.toString());
+                default -> "";
+            };
+
+        }
+        return parameter;
     }
 }

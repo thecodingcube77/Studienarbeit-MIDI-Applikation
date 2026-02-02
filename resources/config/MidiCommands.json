@@ -22,5 +22,25 @@
       "name": "velocity",
       "required": true
     }
+  },
+  "Polyphonic Aftertouch": {
+    "input-type": "button,slider",
+    "channel-applicable": true,
+    "parameter1": {
+      "name": "pitch",
+      "required": true
+    },
+    "parameter2": {
+      "name": "pressure",
+      "required": true
+    }
+  },
+  "Aftertouch": {
+    "input-type": "button",
+    "channel-applicable": true,
+    "parameter1": {
+      "name": "pressure",
+      "required": true
+    }
   }
 }

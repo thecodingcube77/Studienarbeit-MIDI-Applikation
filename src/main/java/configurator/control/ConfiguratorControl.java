@@ -3,7 +3,6 @@
 package configurator.control;
 import javax.swing.*;
 
-import configurator.model.ConfiguratorModel;
 import configurator.model.DropdownModel;
 import configurator.model.MidiDataModel;
 import configurator.model.ConfiguratorTableModel;
@@ -12,6 +11,7 @@ import configurator.view.TableView;
 
 import java.awt.*;
 import java.io.IOException;
+import java.util.ArrayList;
 
 public class ConfiguratorControl {
     private final ConfiguratorTableModel dataModel;
@@ -48,15 +48,20 @@ public class ConfiguratorControl {
         table.getColumnModel().getColumn(3).setCellEditor(parameterEditorControl2);
         table.getColumnModel().getColumn(3).setCellRenderer(new LabelRendererControl(dropdownModel));
 
+        String[] channels = getChannels();
+        JComboBox<String> comboBoxChannel = new JComboBox<>(channels);
+        table.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(comboBoxChannel));
+
         comboBoxCommand.addActionListener(e -> {
             String selectedCommand = (String) comboBoxCommand.getSelectedItem();
             if (selectedCommand == null) return;
-
-            String inputType = dropdownModel.getInputType(selectedCommand);
-
-            table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBoxInputType));
             int row = table.getSelectedRow();
-            table.setValueAt(inputType, row, 1);
+            if (row == -1) return;
+
+            String[] inputType = dropdownModel.getInputType(selectedCommand);
+            comboBoxInputType.setModel(new DefaultComboBoxModel<>(inputType));
+            table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBoxInputType));
+            table.setValueAt(inputType[0], row, 1);
 
             String parameter1 = dropdownModel.getMidiParameter1Name(selectedCommand);
             String parameter2 = dropdownModel.getMidiParameter2Name(selectedCommand);
@@ -66,24 +71,26 @@ public class ConfiguratorControl {
 
             table.setValueAt(parameter1, row, 2);
 
-            tableView.setColumnEditable1(parameter1 != null);
-            tableView.setColumnEditable2(parameter2 != null);
+            dataModel.getMidiDataModel(row).setColumnEditableInputType(inputType.length > 1);
+            dataModel.getMidiDataModel(row).setColumnEditable1(parameter1 != null);
+            dataModel.getMidiDataModel(row).setColumnEditable2(parameter2 != null);
+            dataModel.getMidiDataModel(row).setColumnEditableChannel(dropdownModel.getChannelApplicable(selectedCommand));
 
-            table.repaint();
+            tableView.fireTableDataChanged();
         });
+    }
 
-        comboBoxInputType.addActionListener(e -> {
-            String selectedCommand = (String) comboBoxCommand.getSelectedItem();
-            if (selectedCommand == null) return;
-
-            table.repaint();
-        });
-
+    private String[] getChannels() {
+        ArrayList<String> channels = new ArrayList<>();
+        for (int i = 1; i <= 16; i++) {
+            channels.add(String.valueOf(i));
+        }
+        return channels.toArray(new String[16]);
     }
 
     private void setupActions() {
         view.getAddRowButton().addActionListener(e -> {
-            dataModel.addRow(new MidiDataModel(null, null, null, null, dropdownModel ));
+            dataModel.addRow(new MidiDataModel(null, null, null, null,null, dropdownModel ));
             tableView.fireTableDataChanged();
         });
         view.getSaveButton().addActionListener(e -> {

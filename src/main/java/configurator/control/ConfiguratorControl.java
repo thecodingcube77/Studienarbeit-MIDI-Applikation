@@ -8,6 +8,7 @@ import configurator.model.MidiDataModel;
 import configurator.model.ConfiguratorTableModel;
 import configurator.view.ConfiguratorView;
 import configurator.view.TableView;
+import generator.CodeGenerator;
 
 import java.awt.*;
 import java.io.IOException;
@@ -103,6 +104,10 @@ public class ConfiguratorControl {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        });
+
+        view.getGenerateButton().addActionListener(e -> {
+            CodeGenerator generator = new CodeGenerator();
         });
     }
 }

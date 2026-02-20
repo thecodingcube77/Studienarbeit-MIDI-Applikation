@@ -27,8 +27,8 @@ public class ConfiguratorTableModel {
 
         for (int i = 0; i < getRowCount(); i++) {
             JSONObject rowData = new JSONObject();
-            rowData.put("input-type", rows.get(i).getCommand());
-            rowData.put("command", rows.get(i).getInputType());
+            rowData.put("input-type", rows.get(i).getInputType());
+            rowData.put("command", rows.get(i).getCommand());
             rowData.put("channel", rows.get(i).getChannel());
             rowData.put("parameter1", rows.get(i).getParameter1());
             rowData.put("parameter2", rows.get(i).getParameter2());

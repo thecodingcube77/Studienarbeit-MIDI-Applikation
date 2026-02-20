@@ -48,8 +48,8 @@ public class CodeGenerator {
             JSONObject arrayElement = controllerConfiguration.getJSONObject(i);
             String inputType = arrayElement.getString("input-type");
             switch (inputType) {
-                case "Knopf":
-                    System.out.println("Knopf is supported");
+                case "button":
+                    System.out.println("button is supported");
                     componentList.add(new ButtonComponent(arrayElement, i));
                     System.out.println(this.componentList.get(i));
                     System.out.println(this.componentList.get(i).getSetupCode());

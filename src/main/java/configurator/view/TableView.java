@@ -8,9 +8,8 @@ import javax.swing.table.AbstractTableModel;
 import configurator.model.ConfiguratorTableModel;
 
 public class TableView extends AbstractTableModel {
+
     private final ConfiguratorTableModel model;
-    private boolean editable1 = true;
-    private boolean editable2 = true;
 
     public TableView(ConfiguratorTableModel model) {
         this.model = model;
@@ -29,10 +28,11 @@ public class TableView extends AbstractTableModel {
     @Override
     public String getColumnName(int col) {
         return switch (col) {
-            case 0 -> "Input";
-            case 1 -> "Funktion";
+            case 0 -> "Funktion";
+            case 1 -> "Input";
             case 2 -> "Parameter1";
             case 3 -> "Parameter2";
+            case 4 -> "Channel";
             default -> null;
         };
     }
@@ -41,10 +41,11 @@ public class TableView extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         MidiDataModel row = model.getRow(rowIndex);
         return switch(columnIndex){
-            case 0 -> row.getInput();
-            case 1 -> row.getFunction();
+            case 0 -> row.getCommand();
+            case 1 -> row.getInputType();
             case 2 -> row.getParameter1();
             case 3 -> row.getParameter2();
+            case 4 -> row.getChannel();
             default -> null;
         };
     }
@@ -54,28 +55,23 @@ public class TableView extends AbstractTableModel {
         if(value == null) return;
         MidiDataModel data = model.getRow(row);
         switch(col) {
-            case 0 -> data.setInput((String) value);
-            case 1 -> data.setFunction((String) value);
-            case 2 -> data.setParameter1((String) checkRange((String) value));
-            case 3 -> data.setParameter2((String) checkRange((String) value));
+            case 0 -> data.setCommand((String) value);
+            case 1 -> data.setInputType((String) value);
+            case 2 -> data.setParameter1(checkRange(value));
+            case 3 -> data.setParameter2(checkRange(value));
+            case 4 -> data.setChannel((String) value);
         }
         fireTableRowsUpdated(row, row);
     }
 
     @Override
     public boolean isCellEditable(int rowIndex, int columnIndex) {
-        if (columnIndex == 2) return editable1;
-        if (columnIndex == 3) return editable2;
+        MidiDataModel row = model.getRow(rowIndex);
+        if (columnIndex == 1) return row.isEditableInputType();
+        if (columnIndex == 2) return row.isEditable1();
+        if (columnIndex == 3) return row.isEditable2();
+        if (columnIndex == 4) return row.isEditableChannel();
         return true;
-    }
-
-    public void setColumnEditable1(boolean editable1) {
-        this.editable1 = editable1;
-        fireTableDataChanged();
-    }
-    public void setColumnEditable2(boolean editable2) {
-        this.editable2 = editable2;
-        fireTableDataChanged();
     }
 
     @Override
@@ -88,7 +84,6 @@ public class TableView extends AbstractTableModel {
             if (Integer.parseInt(String.valueOf(value)) > 127) {
                 return String.valueOf(127);
             }
-            ;
             if (Integer.parseInt(String.valueOf(value)) < 0) {
                 return String.valueOf(0);
             }

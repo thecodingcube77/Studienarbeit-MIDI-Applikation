@@ -12,7 +12,6 @@ import java.io.FileWriter;
 
 public class ConfiguratorTableModel {
     private final List<MidiDataModel> rows = new ArrayList<>();
-    private final List<MidiDataModel> columns = new ArrayList<>();
 
     public int getRowCount() {
         return rows.size();
@@ -28,9 +27,9 @@ public class ConfiguratorTableModel {
 
         for (int i = 0; i < getRowCount(); i++) {
             JSONObject rowData = new JSONObject();
-            rowData.put("input-type", rows.get(i).getInput());
-            rowData.put("command", rows.get(i).getFunction());
-            rowData.put("channel", "1");
+            rowData.put("input-type", rows.get(i).getInputType());
+            rowData.put("command", rows.get(i).getCommand());
+            rowData.put("channel", rows.get(i).getChannel());
             rowData.put("parameter1", rows.get(i).getParameter1());
             rowData.put("parameter2", rows.get(i).getParameter2());
             midiData.put(rowData);
@@ -40,20 +39,11 @@ public class ConfiguratorTableModel {
         }
     }
 
-    public void updateInput(int index, String value) {
-        rows.get(index).setInput(value);
-    }
-    public void updateFunction(int index, String value) {
-        rows.get(index).setFunction(value);
-    }
-    public void updateParameter1(int index, String value) {
-        rows.get(index).setParameter1(value);
-    }
-    public void updateParameter2(int index, String value) {
-        rows.get(index).setParameter2(value);
+    public MidiDataModel getMidiDataModel(int index) {
+        return rows.get(index);
     }
 
     public int getColumnCount() {
-        return 4;
+        return 5;
     }
 }

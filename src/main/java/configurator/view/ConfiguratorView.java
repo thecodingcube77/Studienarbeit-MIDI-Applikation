@@ -3,13 +3,13 @@
 package configurator.view;
 
 import javax.swing.*;
-import configurator.model.ConfiguratorTableModel;
 import java.awt.*;
 
 public class ConfiguratorView extends javax.swing.JFrame {
 
     private final JButton addRowButton;
     private final JButton saveButton;
+    private final JButton generateButton;
     private final JTable table;
 
     public ConfiguratorView(TableView tableView) {
@@ -17,16 +17,18 @@ public class ConfiguratorView extends javax.swing.JFrame {
         table = new JTable(tableView);
         addRowButton = new JButton("Neue Zeile");
         saveButton = new JButton("Speichern");
+        generateButton = new JButton("Code generieren");
+        table.getTableHeader().setReorderingAllowed(false);
         initView();
-        System.out.println("Table-UI: " + table.getParent());
-    };
+    }
 
     private void initView() {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(new java.awt.BorderLayout());
         this.add(new JScrollPane(table), java.awt.BorderLayout.NORTH);
-        this.add(addRowButton, BorderLayout.CENTER);
-        this.add(saveButton, BorderLayout.SOUTH);
+        this.add(addRowButton, BorderLayout.WEST);
+        this.add(saveButton, BorderLayout.EAST);
+        this.add(generateButton, BorderLayout.SOUTH);
         this.pack();
         this.setLocationRelativeTo(null);
     }
@@ -41,5 +43,9 @@ public class ConfiguratorView extends javax.swing.JFrame {
 
     public JButton getSaveButton() {
         return saveButton;
+    }
+
+    public JButton getGenerateButton() {
+        return generateButton;
     }
 }

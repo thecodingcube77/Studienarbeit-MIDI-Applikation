@@ -10,6 +10,8 @@ public class ConfiguratorView extends javax.swing.JFrame {
     private final JButton addRowButton;
     private final JButton saveButton;
     private final JButton generateButton;
+    private final JButton openSettingsButton;
+    private final JButton uploadProgramButton;
     private final JTable table;
 
     public ConfiguratorView(TableView tableView) {
@@ -18,6 +20,8 @@ public class ConfiguratorView extends javax.swing.JFrame {
         addRowButton = new JButton("Neue Zeile");
         saveButton = new JButton("Speichern");
         generateButton = new JButton("Code generieren");
+        openSettingsButton = new JButton("Einstellungen");
+        uploadProgramButton = new JButton("Programm hochladen");
         table.getTableHeader().setReorderingAllowed(false);
         initView();
     }
@@ -25,10 +29,17 @@ public class ConfiguratorView extends javax.swing.JFrame {
     private void initView() {
         this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
         this.setLayout(new java.awt.BorderLayout());
-        this.add(new JScrollPane(table), java.awt.BorderLayout.NORTH);
-        this.add(addRowButton, BorderLayout.WEST);
-        this.add(saveButton, BorderLayout.EAST);
-        this.add(generateButton, BorderLayout.SOUTH);
+        JToolBar toolBar = new JToolBar();
+        toolBar.setFloatable(false);
+        toolBar.add(openSettingsButton);
+        toolBar.add(uploadProgramButton);
+        this.add(toolBar, BorderLayout.NORTH);
+        this.add(new JScrollPane(table), java.awt.BorderLayout.CENTER);
+        JPanel buttonPanel = new JPanel(new GridLayout());
+        this.add(buttonPanel, BorderLayout.SOUTH);
+        buttonPanel.add(addRowButton);
+        buttonPanel.add(saveButton);
+        buttonPanel.add(generateButton);
         this.pack();
         this.setLocationRelativeTo(null);
     }
@@ -47,5 +58,13 @@ public class ConfiguratorView extends javax.swing.JFrame {
 
     public JButton getGenerateButton() {
         return generateButton;
+    }
+
+    public JButton getOpenSettingsButton() {
+        return openSettingsButton;
+    }
+
+    public JButton getUploadProgramButton() {
+        return uploadProgramButton;
     }
 }

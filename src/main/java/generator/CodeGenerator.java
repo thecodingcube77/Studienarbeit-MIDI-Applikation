@@ -17,7 +17,7 @@ public class CodeGenerator {
 
     private final String configFilePath = "./ConfiguratorData.json";
     private JSONArray controllerConfiguration;
-    private final String codeOutputPath = "./generatedCode.ino";
+    private final String codeOutputPath = "./generatedCode/generatedCode.ino";
 
     public CodeGenerator() {
         componentList = new ArrayList<>();

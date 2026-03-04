@@ -3,21 +3,29 @@
 package configurator.model;
 
 import java.io.IOException;
-import java.util.*;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.nio.file.Files;
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 
 public class DropdownModel {
 
-    String midiCommands = Files.readString(Path.of("resources", "config", "MidiCommands.json"));
-    JSONObject midiObject = new JSONObject(midiCommands);
+    String midiCommands = null;
+    JSONObject midiObject = null;
     Map<String, ArrayList<String>> midiCommandMap = new HashMap<>();
 
-    public DropdownModel() throws IOException {
-
+    public DropdownModel() {
+        try {
+            midiCommands = Files.readString(Path.of("resources", "config", "MidiCommands.json"));
+            midiObject = new JSONObject(midiCommands);
+        }
+        catch (IOException e) {
+            System.out.println("Probleme beim laden der \"MidiCommands.json\"");
+        }
         for(String key : midiObject.keySet()) {
             String inputType = null;
             String channelApplicable = null;
@@ -39,7 +47,7 @@ public class DropdownModel {
                     midiParameter2Req = String.valueOf(midiObject.getJSONObject(key).getJSONObject("parameter2").getBoolean("required"));
                 }
             }  catch (JSONException e) {
-                e.printStackTrace();
+                System.out.println("Es gab einen Fehler beim Lesen der MidiConfig");
             }
 
             ArrayList<String> midiCommandInfo = new ArrayList<>();

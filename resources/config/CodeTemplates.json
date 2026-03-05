@@ -1,18 +1,29 @@
 {
+  "info": {
+    "replaceable-strings": [
+      "__midiInterfaceName__",
+      "__btnName__",
+      "__pinNumber__",
+      "__noteAddrName__",
+      "__channelName__",
+      "__velocityName__",
+      "__velocityValue__"
+    ]
+  },
   "code-snippets": {
     "global-once": {
-      "general": "#include<Control_Surface.h>\nUSBMIDI_Interface |midiInterfaceName|;\n",
+      "general": "#include<Control_Surface.h>\nUSBMIDI_Interface __midiInterfaceName__;\n",
       "button-note-on": ""
     },
     "global": {
-      "button-note-on": "Button |btnName| {|pinNumber|};\nconst MIDIAddress |noteAddrName| {|midiInterfaceName|, |channelName|};\nconst uint8_t |velocityName| = |velocityValue|;\n"
+      "button-note-on": "Button __btnName__ {__pinNumber__};\nconst MIDIAddress __noteAddrName__ {__midiInterfaceName__, __channelName__};\nconst uint8_t __velocityName__ = __velocityValue__;\n"
 
     },
     "setup": {
-      "button-note-on": "|btnName|.begin();\n"
+      "button-note-on": "__btnName__.begin();\n"
     },
     "loop": {
-      "button-note-on": "|btnName|.update();\nif (|btnName|.getState() == Button::Falling) {\n|midiInterfaceName|.sendNoteOn(|noteAddrName|, |velocityName|);\n}\nelse if (|btnName|.getState() == Button::Rising) {\n|midiInterfaceName|.sendNoteOff(|noteAddrName|, |velocityName|);\n}\n"
+      "button-note-on": "__btnName__.update();\nif (__btnName__.getState() == Button::Falling) {\n__midiInterfaceName__.sendNoteOn(__noteAddrName__, __velocityName__);\n}\nelse if (__btnName__.getState() == Button::Rising) {\n__midiInterfaceName__.sendNoteOff(__noteAddrName__, __velocityName__);\n}\n"
     }
   }
 }

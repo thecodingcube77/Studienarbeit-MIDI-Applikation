@@ -1,5 +1,6 @@
 package generator;
 
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.io.File;
@@ -33,5 +34,15 @@ public class CodeTemplateLoader {
             return new CodeTemplateLoader();
         }
         return instance;
+    }
+
+    public String getCodeTemplate(String inputType, String command, String section) {
+        try {
+            return codeTemplates.getJSONObject("code-snippets").getJSONObject(section).getString(inputType + "-" + command);
+        } catch (JSONException e) {
+            System.out.printf("!!! WARNUNG !!!\nFehler beim Laden von dem Code Template für:\nSection: %s\tCommand: %s\tInput type: %s\n", section, command, inputType);
+            return "";
+        }
+
     }
 }

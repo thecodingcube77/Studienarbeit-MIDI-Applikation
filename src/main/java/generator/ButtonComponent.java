@@ -2,49 +2,33 @@ package generator;
 
 import org.json.JSONObject;
 
+import java.util.Map;
+
 public class ButtonComponent extends CodeGeneratorComponent{
-    private int channel;
-    private String command;
-    private int note;
-    private int velocity;
-    private int inputPin;
+    private JSONObject componentInfo;
 
     public ButtonComponent(JSONObject buttonComponentInfo, int id) {
-        this.channel = buttonComponentInfo.getInt("channel");
-        this.command = buttonComponentInfo.getString("command");
-        this.note = buttonComponentInfo.getInt("parameter1");
-        this.velocity = buttonComponentInfo.getInt("parameter2");
-        this.setComponentId(id);
-        this.inputPin = id + 2;
-    }
-
-    @Override
-    public String toString() {
-        return String.format("ID: %d, channel: %d, command: %s, note: %d, velocity: %d", this.getComponentId(), this.channel, this.command, this.note, this.velocity);
+        this.componentInfo = buttonComponentInfo;
     }
 
     @Override
     public String getGlobalCode() {
-        return String.format("""
-                Button pushbutton%d {%d};
-                const MIDIAddress noteAddress%d {%s, Channel_%d};
-                const uint8_t velocity%d = %d;
-                """,
-                this.getComponentId(),
-                this.inputPin,
-                this.getComponentId(),
-                CodeGeneratorUtilities.noteIntegerToNoteString(this.note),
-                this.channel,
-                this.getComponentId(),
-                this.velocity);
+        return "";
+        /*String command = componentInfo.getString("command");
+        String template = CodeTemplateLoader.getInstance().getCodeTemplate("button", command, "global");
+        return CodeGeneratorUtilities.fillTemplate(template, componentInfo);*/
     }
+
 
     @Override
     public String getSetupCode() {
-        return String.format("""
+        String command = componentInfo.getString("command");
+        String template = CodeTemplateLoader.getInstance().getCodeTemplate("button", command, "setup");
+        return CodeGeneratorUtilities.fillTemplate(template, componentInfo);
+        /*return String.format("""
                 pushbutton%d.begin();
                 """,
-                this.getComponentId());
+                this.getComponentId());*/
     }
 
     @Override

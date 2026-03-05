@@ -1,0 +1,18 @@
+{
+  "code-snippets": {
+    "global-once": {
+      "general": "#include<Control_Surface.h>\nUSBMIDI_Interface |midiInterfaceName|;\n",
+      "button-note-on": ""
+    },
+    "global": {
+      "button-note-on": "Button |btnName| {|pinNumber|};\nconst MIDIAddress |noteAddrName| {|midiInterfaceName|, |channelName|};\nconst uint8_t |velocityName| = |velocityValue|;\n"
+
+    },
+    "setup": {
+      "button-note-on": "|btnName|.begin();\n"
+    },
+    "loop": {
+      "button-note-on": "|btnName|.update();\nif (|btnName|.getState() == Button::Falling) {\n|midiInterfaceName|.sendNoteOn(|noteAddrName|, |velocityName|);\n}\nelse if (|btnName|.getState() == Button::Rising) {\n|midiInterfaceName|.sendNoteOff(|noteAddrName|, |velocityName|);\n}\n"
+    }
+  }
+}

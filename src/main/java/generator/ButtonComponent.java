@@ -2,54 +2,52 @@ package generator;
 
 import org.json.JSONObject;
 
-import java.util.Map;
-
-public class ButtonComponent extends CodeGeneratorComponent{
+public class ButtonComponent implements CodeGeneratorComponent {
     private JSONObject componentInfo;
+    private CodeGeneratorUtilities utilities;
 
-    public ButtonComponent(JSONObject buttonComponentInfo, int id) {
+    public ButtonComponent(CodeGeneratorUtilities utilities, JSONObject buttonComponentInfo) {
         this.componentInfo = buttonComponentInfo;
+        this.utilities = utilities;
     }
 
     @Override
-    public String getGlobalCode() {
-        return "";
-        /*String command = componentInfo.getString("command");
-        String template = CodeTemplateLoader.getInstance().getCodeTemplate("button", command, "global");
-        return CodeGeneratorUtilities.fillTemplate(template, componentInfo);*/
-    }
-
-
-    @Override
-    public String getSetupCode() {
-        String command = componentInfo.getString("command");
-        String template = CodeTemplateLoader.getInstance().getCodeTemplate("button", command, "setup");
-        return CodeGeneratorUtilities.fillTemplate(template, componentInfo);
-        /*return String.format("""
-                pushbutton%d.begin();
-                """,
-                this.getComponentId());*/
+    public String getInputType() {
+        return componentInfo.getString("input-type");
     }
 
     @Override
-    public String getLoopCode(String midiInterfaceName) {
-        return String.format("""
-                pushbutton%d.update();
-                if (pushbutton%d.getState() == Button::Falling) {
-                    %s.sendNoteOn(noteAddress%d, velocity%d);
-                }
-                else if (pushbutton%d.getState() == Button::Rising) {
-                    %s.sendNoteOff(noteAddress%d, velocity%d);
-                }
-                """,
-                this.getComponentId(),
-                this.getComponentId(),
-                midiInterfaceName,
-                this.getComponentId(),
-                this.getComponentId(),
-                this.getComponentId(),
-                midiInterfaceName,
-                this.getComponentId(),
-                this.getComponentId());
+    public String getInputName() {
+        return componentInfo.getString("input-type") + this.getPinNumber();
+    }
+
+    @Override
+    public String getPinNumber() {
+        return "x";
+    }
+
+    @Override
+    public String getNodeAddressName() {
+        return utilities.noteIntegerToNoteString(componentInfo.getInt("parameter1"));
+    }
+
+    @Override
+    public String getChannelName() {
+        return "Channel_" + componentInfo.getString("channel");
+    }
+
+    @Override
+    public String getVelocityValue() {
+        return componentInfo.getString("parameter2");
+    }
+
+    @Override
+    public String getVelocityName() {
+        return "velocity" + this.getPinNumber();
+    }
+
+    @Override
+    public String getCommand() {
+        return componentInfo.getString("command");
     }
 }

@@ -3,16 +3,23 @@
 package configurator.control;
 import javax.swing.*;
 
+import codeuploader.CodeUploader;
 import configurator.model.DropdownModel;
 import configurator.model.MidiDataModel;
 import configurator.model.ConfiguratorTableModel;
 import configurator.view.ConfiguratorView;
+import configurator.view.SettingsView;
 import configurator.view.TableView;
 import generator.CodeGenerator;
+import util.ApplicationSettings;
 
-import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Map;
 
 public class ConfiguratorControl {
     private final ConfiguratorTableModel dataModel;
@@ -20,7 +27,7 @@ public class ConfiguratorControl {
     private final ConfiguratorView view;
     private final TableView tableView;
 
-    public ConfiguratorControl(ConfiguratorTableModel dataModel, DropdownModel dropdownModel) throws IOException {
+    public ConfiguratorControl(ConfiguratorTableModel dataModel, DropdownModel dropdownModel) {//} throws IOException {
         this.dataModel = dataModel;
         this.dropdownModel = dropdownModel;
         this.tableView = new TableView(dataModel);
@@ -32,7 +39,7 @@ public class ConfiguratorControl {
         view.setVisible(true);
     }
 
-    private void setupEditors() throws IOException {
+    private void setupEditors() {
         JTable table = view.getTable();
 
         JComboBox<String> comboBoxCommand = new JComboBox<>(dropdownModel.getMidiCommands());
@@ -108,6 +115,36 @@ public class ConfiguratorControl {
 
         view.getGenerateButton().addActionListener(e -> {
             CodeGenerator generator = new CodeGenerator();
+            System.out.println(CodeUploader.getConnectedBoards());
+        });
+
+        view.getOpenSettingsButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                SettingsView settingsView = new SettingsView();
+                SettingsControl settingscontrol = new SettingsControl(settingsView);
+            }
+        });
+
+        view.getUploadProgramButton().addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                if (!ApplicationSettings.hasSelectedBoard()) {
+                    JOptionPane.showMessageDialog(view,
+                            "Es muss in den Einstellungen ein Board ausgewählt sein",
+                            "Kein Board ausgewählt",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                if (!ApplicationSettings.hasPortAddress()) {
+                    JOptionPane.showMessageDialog(view,
+                            "Es ist nicht der Port gesetzt, an dem dein Board angeschlossen ist. Versuche in den Einstellungen erneut dein Board auszuwählen.",
+                            "Kein Port gesetzt",
+                            JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+                CodeUploader.uploadCode();
+            }
         });
     }
 }

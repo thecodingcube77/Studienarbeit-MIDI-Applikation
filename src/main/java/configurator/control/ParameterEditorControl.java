@@ -16,7 +16,7 @@ public class ParameterEditorControl extends AbstractCellEditor implements TableC
     private JTextField textField = new JTextField();
     private final DropdownModel dropdownModel;
 
-    public ParameterEditorControl(DropdownModel dropdownModel) throws IOException {
+    public ParameterEditorControl(DropdownModel dropdownModel) {
         this.dropdownModel = new DropdownModel();
         panel.add(label, BorderLayout.WEST);
         panel.add(textField, BorderLayout.CENTER);

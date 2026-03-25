@@ -1,13 +1,14 @@
 package generator;
 
-public abstract class CodeGeneratorComponent implements CodeGeneratorComponentInterface{
-    private int componentId;
+import org.json.JSONObject;
 
-    public int getComponentId() {
-        return componentId;
-    }
-
-    public void setComponentId(int newId) {
-        componentId = newId;
-    }
+public interface CodeGeneratorComponent {
+    public String getInputType();
+    public String getInputName();
+    public String getPinNumber();
+    public String getNodeAddressName();
+    public String getChannelName();
+    public String getVelocityValue();
+    public String getVelocityName();
+    public String getCommand();
 }

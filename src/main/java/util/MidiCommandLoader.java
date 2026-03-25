@@ -24,7 +24,6 @@ public class MidiCommandLoader {
             }
         } catch (FileNotFoundException e) {
             System.out.println("Could not read Midi Commands JSON File at:" + midiCommandConfigFilePath);
-            e.printStackTrace();
         }
         midiCommandConfig = new JSONObject(jsonStringBuilder.toString());
     }

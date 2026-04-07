@@ -7,11 +7,11 @@ import java.awt.*;
 
 public class ConfiguratorView extends javax.swing.JFrame {
 
-    private final JButton addRowButton;
-    private final JButton saveButton;
-    private final JButton generateButton;
-    private final JButton openSettingsButton;
-    private final JButton uploadProgramButton;
+    private JButton addRowButton;
+    private JButton saveButton;
+    private JButton generateButton;
+    private JButton openSettingsButton;
+    private JButton uploadProgramButton;
     private final JTable table;
 
     public ConfiguratorView(TableView tableView) {
@@ -23,25 +23,29 @@ public class ConfiguratorView extends javax.swing.JFrame {
         openSettingsButton = new JButton("Einstellungen");
         uploadProgramButton = new JButton("Programm hochladen");
         table.getTableHeader().setReorderingAllowed(false);
-        initView();
+        initLayout();
     }
 
-    private void initView() {
-        this.setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        this.setLayout(new java.awt.BorderLayout());
+    private void initLayout() {
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        setLayout(new BorderLayout());
+
         JToolBar toolBar = new JToolBar();
         toolBar.setFloatable(false);
         toolBar.add(openSettingsButton);
         toolBar.add(uploadProgramButton);
-        this.add(toolBar, BorderLayout.NORTH);
-        this.add(new JScrollPane(table), java.awt.BorderLayout.CENTER);
-        JPanel buttonPanel = new JPanel(new GridLayout());
-        this.add(buttonPanel, BorderLayout.SOUTH);
+        add(toolBar, BorderLayout.NORTH);
+
+        add(new JScrollPane(table), BorderLayout.CENTER);
+
+        JPanel buttonPanel = new JPanel(new GridLayout(1, 3));
         buttonPanel.add(addRowButton);
         buttonPanel.add(saveButton);
         buttonPanel.add(generateButton);
-        this.pack();
-        this.setLocationRelativeTo(null);
+        add(buttonPanel, BorderLayout.SOUTH);
+
+        pack();
+        setLocationRelativeTo(null);
     }
 
     public JTable getTable() {

@@ -17,7 +17,7 @@ public class CodeGenerator {
     private List<CodeGeneratorComponent> componentList;
     private String midiInterfaceName;
 
-    private final String configFilePath = "./ConfiguratorData.json";
+    private final String configFilePath = "./resources/ConfiguratorData.json";
     private JSONArray controllerConfiguration;
 
     private final String codeOutputPath = "./generatedCode/generatedCode.ino";

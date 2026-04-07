@@ -1,150 +1,145 @@
-// Erstellt die JTable inklusive zusammenhängenden Zeilen
-
 package configurator.control;
+
+import configurator.model.*;
+import configurator.view.*;
+
 import javax.swing.*;
-
-import codeuploader.CodeUploader;
-import configurator.model.DropdownModel;
-import configurator.model.MidiDataModel;
-import configurator.model.ConfiguratorTableModel;
-import configurator.view.ConfiguratorView;
-import configurator.view.SettingsView;
-import configurator.view.TableView;
-import generator.CodeGenerator;
-import util.ApplicationSettings;
-
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
+import javax.swing.table.TableColumn;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.Map;
 
 public class ConfiguratorControl {
-    private final ConfiguratorTableModel dataModel;
-    private final DropdownModel dropdownModel;
+    private final ConfiguratorModel model;
+    private final MidiConfigModel configModel;
     private final ConfiguratorView view;
     private final TableView tableView;
 
-    public ConfiguratorControl(ConfiguratorTableModel dataModel, DropdownModel dropdownModel) {//} throws IOException {
-        this.dataModel = dataModel;
-        this.dropdownModel = dropdownModel;
-        this.tableView = new TableView(dataModel);
+    public ConfiguratorControl(ConfiguratorModel model, MidiConfigModel configModel) {
+        this.model = model;
+        this.configModel = configModel;
+        this.tableView = new TableView(model, configModel);
         this.view = new ConfiguratorView(tableView);
 
-        setupEditors();
-        setupActions();
+        setupTableEditors();
+        setupButtonActions();
 
         view.setVisible(true);
     }
-
-    private void setupEditors() {
+    private void setupTableEditors() {
         JTable table = view.getTable();
 
-        JComboBox<String> comboBoxCommand = new JComboBox<>(dropdownModel.getMidiCommands());
-        table.getColumnModel().getColumn(0).setCellEditor(new DefaultCellEditor(comboBoxCommand));
+        LabelRendererView labelRendererView = new LabelRendererView(configModel);
+        ParameterEditorView parameterEditorView = new ParameterEditorView(configModel);
 
-        JComboBox<String> comboBoxInputType = new JComboBox<>();
-        table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBoxInputType));
+        table.getColumnModel().getColumn(2).setCellRenderer(labelRendererView);
+        table.getColumnModel().getColumn(2).setCellEditor(parameterEditorView);
 
-        ParameterEditorControl parameterEditorControl1 = new ParameterEditorControl(dropdownModel);
-        table.getColumnModel().getColumn(2).setCellEditor(parameterEditorControl1);
-        table.getColumnModel().getColumn(2).setCellRenderer(new LabelRendererControl(dropdownModel));
+        table.getColumnModel().getColumn(3).setCellRenderer(labelRendererView);
+        table.getColumnModel().getColumn(3).setCellEditor(parameterEditorView);
 
-        ParameterEditorControl parameterEditorControl2 = new ParameterEditorControl(dropdownModel);
-        table.getColumnModel().getColumn(3).setCellEditor(parameterEditorControl2);
-        table.getColumnModel().getColumn(3).setCellRenderer(new LabelRendererControl(dropdownModel));
+        TableColumn commandColumn = table.getColumnModel().getColumn(0);
+        JComboBox<String> commandComboBox = new JComboBox<>(configModel.getMidiCommands());
+        commandColumn.setCellEditor(new DefaultCellEditor(commandComboBox));
 
-        String[] channels = getChannels();
-        JComboBox<String> comboBoxChannel = new JComboBox<>(channels);
-        table.getColumnModel().getColumn(4).setCellEditor(new DefaultCellEditor(comboBoxChannel));
-
-        comboBoxCommand.addActionListener(e -> {
-            String selectedCommand = (String) comboBoxCommand.getSelectedItem();
-            if (selectedCommand == null) return;
-            int row = table.getSelectedRow();
-            if (row == -1) return;
-
-            String[] inputType = dropdownModel.getInputType(selectedCommand);
-            comboBoxInputType.setModel(new DefaultComboBoxModel<>(inputType));
-            table.getColumnModel().getColumn(1).setCellEditor(new DefaultCellEditor(comboBoxInputType));
-            table.setValueAt(inputType[0], row, 1);
-
-            String parameter1 = dropdownModel.getMidiParameter1Name(selectedCommand);
-            String parameter2 = dropdownModel.getMidiParameter2Name(selectedCommand);
-
-            parameterEditorControl1.setLabel(dropdownModel.getMidiParameter1Name(selectedCommand));
-            parameterEditorControl2.setLabel(dropdownModel.getMidiParameter2Name(selectedCommand));
-
-            table.setValueAt(parameter1, row, 2);
-
-            dataModel.getMidiDataModel(row).setColumnEditableInputType(inputType.length > 1);
-            dataModel.getMidiDataModel(row).setColumnEditable1(parameter1 != null);
-            dataModel.getMidiDataModel(row).setColumnEditable2(parameter2 != null);
-            dataModel.getMidiDataModel(row).setColumnEditableChannel(dropdownModel.getChannelApplicable(selectedCommand));
-
-            tableView.fireTableDataChanged();
-        });
-    }
-
-    private String[] getChannels() {
-        ArrayList<String> channels = new ArrayList<>();
-        for (int i = 1; i <= 16; i++) {
-            channels.add(String.valueOf(i));
+        TableColumn channelColumn = table.getColumnModel().getColumn(4);
+        String[] channels = new String[16];
+        for (int i = 0; i < 16; i++) {
+            channels[i] = String.valueOf(i+1);
         }
-        return channels.toArray(new String[16]);
+        JComboBox<String> channelComboBox = new JComboBox<>(channels);
+        channelColumn.setCellEditor(new DefaultCellEditor(channelComboBox));
+
+        table.getModel().addTableModelListener(e -> {
+            if (e.getType() == javax.swing.event.TableModelEvent.UPDATE) {
+                int row = e.getFirstRow();
+                int col = e.getColumn();
+                handleTableUpdate(row, col);
+            }
+        });
+    }
+    private void handleTableUpdate(int row, int col) {
+        MidiDataModel data = model.getRow(row);
+
+        switch (col) {
+            case 0 -> setCommand(data, row);
+            case 1 -> {}
+            case 2 -> setParameter1(data);
+            case 3 -> setParameter2(data);
+        }
+        view.getTable().repaint();
     }
 
-    private void setupActions() {
+    private void setCommand(MidiDataModel data, int row){
+        MidiCommandDefinition def = configModel.getDefinition(data.getCommand());
+        if (def != null ){
+            data.setInputType(def.getInputTypes()[0]);
+            updateInputEditor(row, def.getInputTypes());
+            if (def.getParameter1Name() == null) data.setParameter1("0");
+            if (def.getParameter2Name() == null) data.setParameter2("0");
+            tableView.fireTableRowsUpdated(row, row);
+        }
+    }
+
+    private void updateInputEditor(int row, String[] inputTypes) {
+        JComboBox<String> inputTypeComboBox = new JComboBox<>(inputTypes);
+        TableColumn inputType = view.getTable().getColumnModel().getColumn(1);
+        inputType.setCellEditor(new DefaultCellEditor(inputTypeComboBox));
+    }
+
+    private void setParameter1(MidiDataModel data){
+        data.setParameter1(validateRange(data.getParameter1()));
+    }
+
+    private void setParameter2(MidiDataModel data){
+        data.setParameter2(validateRange(data.getParameter2()));
+    }
+
+    private String validateRange(Object value){
+        try {
+            int i = Integer.parseInt(String.valueOf(value));
+            return String.valueOf(Math.max(0, Math.min(127,i)));
+        } catch (NumberFormatException e){
+            return "0";
+        }
+    }
+
+    private void setupButtonActions() {
         view.getAddRowButton().addActionListener(e -> {
-            dataModel.addRow(new MidiDataModel(null, null, null, null,null, dropdownModel ));
-            tableView.fireTableDataChanged();
+            model.addRow(new MidiDataModel("", "", "0", "0", "1"));
+            tableView.fireTableRowsInserted(model.getRowCount() - 1, model.getRowCount() - 1);
         });
+
         view.getSaveButton().addActionListener(e -> {
-            JTable table = view.getTable();
             try {
-                if (table.isEditing()) {
-                    table.getCellEditor().stopCellEditing();
+                if (view.getTable().isEditing()){
+                    view.getTable().getCellEditor().stopCellEditing();
                 }
-                dataModel.saveTable();
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+                model.save();
+                JOptionPane.showMessageDialog(view, "Erfolgreich gespeichert!");
+            } catch (IOException exception) {
+                JOptionPane.showMessageDialog(view, "Fehler beim speichern: " + exception.getMessage());
             }
+        });
+
+        view.getOpenSettingsButton().addActionListener(e -> {
+            SettingsView sView = new SettingsView();
+            new SettingsControl(sView);
         });
 
         view.getGenerateButton().addActionListener(e -> {
-            CodeGenerator generator = new CodeGenerator();
-            System.out.println(CodeUploader.getConnectedBoards());
+            generator.CodeGenerator generator = new generator.CodeGenerator();
+            System.out.println(codeuploader.CodeUploader.getConnectedBoards());
         });
 
-        view.getOpenSettingsButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                SettingsView settingsView = new SettingsView();
-                SettingsControl settingscontrol = new SettingsControl(settingsView);
+        view.getUploadProgramButton().addActionListener(e -> {
+            if (!util.ApplicationSettings.hasSelectedBoard()) {
+                JOptionPane.showMessageDialog(view,"Es muss ein Board ausgewählt sein", "Fehler", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-        });
-
-        view.getUploadProgramButton().addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                if (!ApplicationSettings.hasSelectedBoard()) {
-                    JOptionPane.showMessageDialog(view,
-                            "Es muss in den Einstellungen ein Board ausgewählt sein",
-                            "Kein Board ausgewählt",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                if (!ApplicationSettings.hasPortAddress()) {
-                    JOptionPane.showMessageDialog(view,
-                            "Es ist nicht der Port gesetzt, an dem dein Board angeschlossen ist. Versuche in den Einstellungen erneut dein Board auszuwählen.",
-                            "Kein Port gesetzt",
-                            JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-                CodeUploader.uploadCode();
+            if (!util.ApplicationSettings.hasPortAddress()) {
+                JOptionPane.showMessageDialog(view,"Es ist kein Port gesetzt", "Fehler", JOptionPane.ERROR_MESSAGE);
+                return;
             }
+            codeuploader.CodeUploader.uploadCode();
         });
     }
 }

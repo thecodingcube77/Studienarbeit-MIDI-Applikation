@@ -127,6 +127,7 @@ public class ConfiguratorControl {
 
         view.getGenerateButton().addActionListener(e -> {
             generator.CodeGenerator generator = new generator.CodeGenerator();
+            JOptionPane.showMessageDialog(view, "Code wird generiert!");
             System.out.println(codeuploader.CodeUploader.getConnectedBoards());
         });
 

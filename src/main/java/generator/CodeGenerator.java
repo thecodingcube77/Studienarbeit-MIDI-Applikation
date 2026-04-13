@@ -20,8 +20,10 @@ public class CodeGenerator {
     private final String configFilePath = "./resources/ConfiguratorData.json";
     private JSONArray controllerConfiguration;
 
-    private final String codeOutputPath = "./generatedCode/generatedCode.ino";
+    private final String codeOutputPath = "./generatedCode.ino";
     private JSONObject codeTemplates;
+
+    private CodeGeneratorUtilities utilities = new CodeGeneratorUtilities();
 
     public CodeGenerator() {
         componentList = new ArrayList<>();
@@ -72,11 +74,12 @@ public class CodeGenerator {
     private void applyConfiguration() {
         for (int i = 0; i < controllerConfiguration.length(); i++) {
             JSONObject arrayElement = controllerConfiguration.getJSONObject(i);
+            arrayElement.put("pin-number", String.valueOf(i + 2));
             String inputType = arrayElement.getString("input-type");
             switch (inputType) {
                 case "button":
                     System.out.println("button is supported");
-                    componentList.add(new ButtonComponent(new CodeGeneratorUtilities(), arrayElement));
+                    componentList.add(new ButtonComponent(utilities, arrayElement));
                     break;
                 case "potentiometer":
                 default:

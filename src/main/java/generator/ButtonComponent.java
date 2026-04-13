@@ -23,7 +23,7 @@ public class ButtonComponent implements CodeGeneratorComponent {
 
     @Override
     public String getPinNumber() {
-        return "x";
+        return componentInfo.getString("pin-number");
     }
 
     @Override

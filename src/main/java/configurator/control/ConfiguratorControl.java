@@ -93,7 +93,7 @@ public class ConfiguratorControl {
         data.setParameter2(validateRange(data.getParameter2()));
     }
 
-    private String validateRange(Object value){
+    public String validateRange(Object value){
         try {
             int i = Integer.parseInt(String.valueOf(value));
             return String.valueOf(Math.max(0, Math.min(127,i)));
@@ -127,6 +127,7 @@ public class ConfiguratorControl {
 
         view.getGenerateButton().addActionListener(e -> {
             generator.CodeGenerator generator = new generator.CodeGenerator();
+            JOptionPane.showMessageDialog(view, "Code wird generiert!");
             System.out.println(codeuploader.CodeUploader.getConnectedBoards());
         });
 
